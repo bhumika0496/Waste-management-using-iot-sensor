@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact the Smart Waste Management team with questions, feedback, or support requests.">
+    <title>Contact Us | GreenCycle</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="contact-page">
+    <header class="site-header">
+        <a class="brand" href="home.html" aria-label="GreenCycle home">
+            <span class="brand-icon" aria-hidden="true">♻</span>
+            <span>Green<span class="brand-accent">Cycle</span></span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span class="menu-toggle-label">Menu</span>
+            <span class="menu-toggle-icon" aria-hidden="true">☰</span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+            <a href="home.html">Home</a>
+            <a href="AboutUs.html">About us</a>
+            <a href="Services.html">Services</a>
+            <a href="Dashboard.html">Dashboard</a>
+            <a href="Reports.html">Reports</a>
+            <a class="active" href="Contacts.html" aria-current="page">Contact</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="contact-hero">
+            <div class="contact-hero-copy">
+                <p class="eyebrow">Contact our team</p>
+                <h1>Let’s make your community <span>greener.</span></h1>
+                <p class="contact-hero-description">Have a question, idea, or need a hand? We’re happy to help you find the right next step.</p>
+                <a class="button button-primary" href="#contact-form">Get in touch <span aria-hidden="true">↓</span></a>
+            </div>
+            <div class="contact-hero-card">
+                <span class="contact-hero-icon" aria-hidden="true">✦</span>
+                <p class="eyebrow">Here to help</p>
+                <h2>Small questions can lead to big changes.</h2>
+                <p>Reach out to our team for support, partnership enquiries, or ideas to make waste collection smarter.</p>
+                <div class="contact-availability">
+                    <span class="status-dot" aria-hidden="true"></span>
+                    <span>Available Monday–Saturday, 9 AM–5 PM</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="contact-content" aria-labelledby="contact-section-title">
+            <div class="contact-section-heading">
+                <p class="eyebrow">We’d love to hear from you</p>
+                <h2 id="contact-section-title">Get in touch</h2>
+                <p>Choose the way that works best for you, or send us a message using the form.</p>
+            </div>
+
+            <div class="contact-grid">
+                <aside class="contact-details" aria-label="Contact details">
+                    <h3>Contact details</h3>
+                    <p class="contact-details-intro">Our team is ready to answer your questions and hear your feedback.</p>
+
+                    <a class="contact-detail" href="mailto:support@smartwaste.com">
+                        <span class="contact-detail-icon" aria-hidden="true">@</span>
+                        <span>
+                            <span class="contact-detail-label">Email us</span>
+                            <strong>support@smartwaste.com</strong>
+                        </span>
+                    </a>
+                    <a class="contact-detail" href="tel:+919873736732">
+                        <span class="contact-detail-icon" aria-hidden="true">☎</span>
+                        <span>
+                            <span class="contact-detail-label">Call us</span>
+                            <strong>+91 98737 36732</strong>
+                        </span>
+                    </a>
+                    <div class="contact-detail">
+                        <span class="contact-detail-icon" aria-hidden="true">⌖</span>
+                        <span>
+                            <span class="contact-detail-label">Visit us</span>
+                            <strong>College Campus, India</strong>
+                        </span>
+                    </div>
+                    <div class="contact-hours">
+                        <span class="contact-detail-label">Working hours</span>
+                        <strong>Monday–Saturday</strong>
+                        <span>9:00 AM–5:00 PM</span>
+                    </div>
+                </aside>
+
+                <section class="contact-form-card" aria-labelledby="form-title">
+                    <h3 id="form-title">Send us a message</h3>
+                    <p class="contact-form-intro">Fill in the details below and we’ll be glad to hear from you.</p>
+                    <p class="contact-demo-note">This website demo does not send or store form submissions. Please email us directly for a reply.</p>
+
+                    <form id="contact-form">
+                        <div class="contact-form-row">
+                            <div class="form-field">
+                                <label for="name">Full name <span aria-hidden="true">*</span></label>
+                                <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" required>
+                            </div>
+                            <div class="form-field">
+                                <label for="email">Email address <span aria-hidden="true">*</span></label>
+                                <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+                            </div>
+                        </div>
+                        <div class="contact-form-row">
+                            <div class="form-field">
+                                <label for="phone">Phone number <span class="optional-label">(optional)</span></label>
+                                <input type="tel" id="phone" name="phone" placeholder="+91 98765 43210" autocomplete="tel">
+                            </div>
+                            <div class="form-field">
+                                <label for="subject">Subject <span aria-hidden="true">*</span></label>
+                                <select id="subject" name="subject" required>
+                                    <option value="" selected disabled>Select a subject</option>
+                                    <option value="General enquiry">General enquiry</option>
+                                    <option value="Technical support">Technical support</option>
+                                    <option value="Complaint">Complaint</option>
+                                    <option value="Suggestion">Suggestion</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-field">
+                            <label for="message">Your message <span aria-hidden="true">*</span></label>
+                            <textarea id="message" name="message" rows="5" minlength="10" maxlength="600" placeholder="How can we help?" aria-describedby="message-count" required></textarea>
+                            <div class="message-meta">
+                                <span id="form-status" role="status" aria-live="polite"></span>
+                                <span id="message-count">0 / 600</span>
+                            </div>
+                        </div>
+                        <button class="button button-primary contact-submit" type="submit">Send message <span aria-hidden="true">→</span></button>
+                    </form>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <a class="brand footer-brand" href="home.html">
+            <span class="brand-icon" aria-hidden="true">♻</span>
+            <span>Green<span class="brand-accent">Cycle</span></span>
+        </a>
+        <p>Building a cleaner, greener future—one community at a time.</p>
+        <p class="copyright">&copy; <span id="current-year">2026</span> GreenCycle. All rights reserved.</p>
+    </footer>
+</body>
+</html>

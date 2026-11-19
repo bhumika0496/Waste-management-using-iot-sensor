@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7f4">
+    <title>Dashboard | Smart Waste Management</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --green: #237a57;
+            --green-dark: #185b40;
+            --green-soft: #e8f3ed;
+            --ink: #1d2b24;
+            --muted: #78847d;
+            --line: #e8ede9;
+            --surface: #ffffff;
+            --page: #f5f7f4;
+            --shadow: 0 8px 28px rgba(27, 55, 39, .055);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--page);
+            color: var(--ink);
+            font: 14px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        button, input, select { font: inherit; }
+        a { color: inherit; text-decoration: none; }
+        .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+
+        .app-shell { display: flex; min-height: 100vh; }
+
+        .sidebar {
+            position: fixed;
+            inset: 0 auto 0 0;
+            z-index: 3;
+            display: flex;
+            width: 248px;
+            flex-direction: column;
+            padding: 28px 18px 20px;
+            background: #fff;
+            border-right: 1px solid var(--line);
+        }
+
+        .brand { display: flex; align-items: center; gap: 12px; padding: 0 10px 36px; }
+        .brand-mark {
+            display: grid;
+            width: 40px;
+            height: 40px;
+            place-items: center;
+            border-radius: 13px;
+            background: var(--green-soft);
+            color: var(--green);
+            font-size: 21px;
+        }
+        .brand-name { font-size: 14px; font-weight: 750; letter-spacing: -.3px; }
+        .brand-subtitle { color: var(--muted); font-size: 11px; }
+        .nav-label { padding: 0 12px 10px; color: #a0aaa3; font-size: 10px; font-weight: 750; letter-spacing: 1.1px; text-transform: uppercase; }
+        .nav-links { display: grid; gap: 5px; }
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-height: 44px;
+            padding: 0 12px;
+            border-radius: 10px;
+            color: #68756d;
+            font-size: 13px;
+            font-weight: 550;
+            transition: background .18s ease, color .18s ease;
+        }
+        .nav-links a:hover { background: #f4f7f4; color: var(--green-dark); }
+        .nav-links a.active { background: var(--green-soft); color: var(--green-dark); font-weight: 700; }
+        .nav-icon { width: 19px; text-align: center; font-size: 16px; }
+        .sidebar-bottom { margin-top: auto; }
+        .sidebar-note { margin: 0 4px 16px; padding: 15px; border: 1px solid var(--line); border-radius: 12px; background: #fbfcfb; }
+        .sidebar-note strong { display: block; margin-bottom: 4px; font-size: 12px; }
+        .sidebar-note span { color: var(--muted); font-size: 11px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; padding: 12px 8px 0; border-top: 1px solid var(--line); }
+        .avatar { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #e9eee9; color: var(--green-dark); font-size: 12px; font-weight: 750; }
+        .user-name { font-size: 12px; font-weight: 700; }
+        .user-role { color: var(--muted); font-size: 11px; }
+
+        .main-content { width: calc(100% - 248px); margin-left: 248px; padding: 28px 38px 24px; }
+        .topbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-bottom: 34px; }
+        .breadcrumb { color: var(--muted); font-size: 12px; }
+        .topbar-actions { display: flex; align-items: center; gap: 12px; }
+        .date-label { color: #657269; font-size: 12px; }
+        .icon-button, .menu-button {
+            display: grid;
+            width: 38px;
+            height: 38px;
+            place-items: center;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: #fff;
+            color: #657269;
+            cursor: pointer;
+        }
+        .menu-button { display: none; }
+        .page-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 20px; margin-bottom: 25px; }
+        .eyebrow { margin: 0 0 5px; color: var(--green); font-size: 11px; font-weight: 750; letter-spacing: 1px; text-transform: uppercase; }
+        h1, h2, h3, p { margin-top: 0; }
+        .page-heading h1 { margin-bottom: 5px; font-size: clamp(24px, 3vw, 31px); letter-spacing: -1.1px; line-height: 1.2; }
+        .page-heading p { margin-bottom: 0; color: var(--muted); font-size: 13px; }
+        .primary-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 40px;
+            padding: 0 15px;
+            border: 0;
+            border-radius: 9px;
+            background: var(--green);
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            transition: background .18s ease, transform .18s ease;
+        }
+        .primary-button:hover { transform: translateY(-1px); background: var(--green-dark); }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .stat-card, .panel { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); box-shadow: var(--shadow); }
+        .stat-card { min-height: 142px; padding: 18px; }
+        .stat-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
+        .stat-label { color: #68756d; font-size: 12px; font-weight: 600; }
+        .stat-icon { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 10px; background: var(--green-soft); color: var(--green); font-size: 16px; }
+        .stat-card.warning .stat-icon { background: #fff4df; color: #b77916; }
+        .stat-card.danger .stat-icon { background: #fdeceb; color: #c4504c; }
+        .stat-value { margin-bottom: 2px; font-size: 27px; font-weight: 750; letter-spacing: -.8px; line-height: 1.2; }
+        .stat-caption { color: var(--muted); font-size: 11px; }
+        .stat-caption strong { color: var(--green); font-weight: 700; }
+
+        .content-grid { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(260px, .85fr); gap: 18px; margin-bottom: 20px; }
+        .panel { padding: 20px; }
+        .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 17px; }
+        .panel-heading h2, .panel-heading h3 { margin-bottom: 3px; font-size: 14px; letter-spacing: -.2px; }
+        .panel-heading p { margin-bottom: 0; color: var(--muted); font-size: 11px; }
+        .period-select, .search-input {
+            min-height: 34px;
+            padding: 0 10px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            outline: none;
+            background: #fff;
+            color: #536057;
+            font-size: 11px;
+        }
+        .period-select:focus, .search-input:focus { border-color: #9dc9b2; box-shadow: 0 0 0 3px rgba(35, 122, 87, .08); }
+        .chart-wrap { position: relative; height: 226px; }
+        #wasteChart { display: block; width: 100%; height: 100%; }
+        .legend { display: flex; gap: 18px; margin-top: 8px; color: #6d7971; font-size: 11px; }
+        .legend span { display: inline-flex; align-items: center; gap: 6px; }
+        .legend i { width: 8px; height: 8px; border-radius: 50%; background: #358b65; }
+        .legend .dry-dot { background: #b7d8c4; }
+
+        .status-list { display: grid; gap: 19px; padding-top: 4px; }
+        .status-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; }
+        .status-name { font-size: 12px; font-weight: 650; }
+        .status-count { color: #6d7971; font-size: 11px; }
+        .progress-track { grid-column: 1 / -1; height: 7px; overflow: hidden; border-radius: 10px; background: #f0f3f0; }
+        .progress-fill { height: 100%; border-radius: inherit; background: #3a956e; }
+        .status-row:nth-child(2) .progress-fill { background: #e4ad4e; }
+        .status-row:nth-child(3) .progress-fill { background: #d86d64; }
+        .status-summary { display: flex; align-items: center; gap: 8px; margin-top: 23px; padding: 11px 12px; border-radius: 9px; background: #f3f8f4; color: #4a6554; font-size: 11px; }
+        .status-summary strong { color: var(--green-dark); }
+
+        .table-panel { padding: 0; overflow: hidden; margin-bottom: 20px; }
+        .table-panel .panel-heading { align-items: center; padding: 20px 20px 15px; margin: 0; }
+        .table-controls { display: flex; gap: 8px; }
+        .search-input { width: 180px; }
+        .table-scroll { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; text-align: left; white-space: nowrap; }
+        thead { background: #f8faf8; }
+        th { padding: 11px 20px; color: #849087; font-size: 10px; font-weight: 750; letter-spacing: .55px; text-transform: uppercase; }
+        td { padding: 13px 20px; border-top: 1px solid #f0f2f0; color: #59665e; font-size: 11px; }
+        tbody tr { transition: background .15s ease; }
+        tbody tr:hover { background: #fbfcfb; }
+        .bin-id { color: #27372e; font-weight: 700; }
+        .status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border-radius: 20px; background: #edf6f0; color: #28714e; font-size: 10px; font-weight: 700; }
+        .status-badge::before { width: 5px; height: 5px; border-radius: 50%; background: currentColor; content: ""; }
+        .status-badge.nearly-full { background: #fff5e3; color: #a66c13; }
+        .status-badge.full { background: #fceeed; color: #b94d48; }
+        .fill-cell { display: flex; align-items: center; gap: 8px; }
+        .mini-track { width: 54px; height: 5px; border-radius: 6px; background: #edf0ed; }
+        .mini-track span { display: block; height: 100%; border-radius: inherit; background: #4a9a70; }
+        .view-button { border: 0; background: transparent; color: var(--green); cursor: pointer; font-size: 11px; font-weight: 700; }
+        .view-button:hover { color: var(--green-dark); text-decoration: underline; }
+        .empty-row { padding: 24px; color: var(--muted); text-align: center; }
+
+        .bottom-grid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(250px, .7fr); gap: 18px; }
+        .location-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+        .location-item { display: flex; align-items: center; gap: 9px; padding: 10px; border: 1px solid #eef1ee; border-radius: 9px; }
+        .location-pin { display: grid; width: 29px; height: 29px; flex: 0 0 auto; place-items: center; border-radius: 8px; background: #f0f6f1; color: var(--green); }
+        .location-item strong { display: block; font-size: 10px; }
+        .location-item span { display: block; color: var(--muted); font-size: 10px; }
+        .reports-card { display: flex; flex-direction: column; justify-content: space-between; background: #1e6347; color: #fff; }
+        .reports-card .eyebrow { color: #a9d8bd; }
+        .reports-card h3 { max-width: 220px; margin: 8px 0; font-size: 19px; letter-spacing: -.5px; line-height: 1.3; }
+        .reports-card p { margin-bottom: 18px; color: #d1e5d8; font-size: 11px; }
+        .reports-card .primary-button { align-self: flex-start; background: #fff; color: var(--green-dark); }
+        .reports-card .primary-button:hover { background: #eaf3ed; }
+        footer { padding: 24px 0 0; color: #929d95; font-size: 10px; }
+
+        dialog { width: min(420px, calc(100% - 32px)); padding: 0; border: 1px solid var(--line); border-radius: 15px; box-shadow: 0 24px 80px rgba(20, 40, 28, .2); }
+        dialog::backdrop { background: rgba(20, 35, 26, .35); backdrop-filter: blur(2px); }
+        .dialog-content { padding: 22px; }
+        .dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+        .dialog-heading h2 { margin: 0; font-size: 19px; }
+        .dialog-heading p { margin: 3px 0 0; color: var(--muted); font-size: 12px; }
+        .dialog-close { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 22px; line-height: 1; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .detail-item { padding: 12px; border-radius: 9px; background: #f7f9f7; }
+        .detail-item span { display: block; margin-bottom: 4px; color: var(--muted); font-size: 10px; }
+        .detail-item strong { font-size: 12px; }
+        .toast { position: fixed; right: 24px; bottom: 24px; z-index: 5; padding: 12px 16px; border-radius: 10px; background: #1e6347; color: #fff; box-shadow: var(--shadow); font-size: 12px; opacity: 0; pointer-events: none; transform: translateY(8px); transition: opacity .2s ease, transform .2s ease; }
+        .toast.visible { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1100px) {
+            .main-content { padding-right: 24px; padding-left: 24px; }
+            .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .content-grid { grid-template-columns: minmax(0, 1.2fr) minmax(240px, .8fr); }
+        }
+        @media (max-width: 760px) {
+            .sidebar { width: 230px; transform: translateX(-100%); transition: transform .22s ease; box-shadow: 12px 0 30px rgba(20, 40, 28, .08); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { width: 100%; margin-left: 0; padding: 18px 18px 22px; }
+            .topbar { margin-bottom: 26px; }
+            .menu-button { display: grid; }
+            .topbar { justify-content: flex-start; }
+            .topbar-actions { margin-left: auto; }
+            .content-grid, .bottom-grid { grid-template-columns: 1fr; }
+            .page-heading { align-items: flex-start; }
+        }
+        @media (max-width: 480px) {
+            .main-content { padding-right: 14px; padding-left: 14px; }
+            .date-label { display: none; }
+            .page-heading { flex-direction: column; }
+            .page-heading .primary-button { width: 100%; }
+            .stats-grid { gap: 10px; }
+            .stat-card { min-height: 130px; padding: 14px; }
+            .stat-value { font-size: 24px; }
+            .panel { padding: 16px; }
+            .table-panel { padding: 0; }
+            .table-panel .panel-heading { align-items: flex-start; flex-direction: column; padding: 16px; }
+            .table-controls, .search-input { width: 100%; }
+            .location-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" id="sidebar">
+            <a class="brand" href="Dashboard.html" aria-label="Smart Waste Management home">
+                <span class="brand-mark" aria-hidden="true">♻</span>
+                <span><span class="brand-name">EcoTrack</span><span class="brand-subtitle">Smart Waste Management</span></span>
+            </a>
+            <div class="nav-label">Workspace</div>
+            <nav class="nav-links" aria-label="Main navigation">
+                <a class="active" href="Dashboard.html" aria-current="page"><span class="nav-icon" aria-hidden="true">▦</span>Dashboard</a>
+                <a href="Reports.html"><span class="nav-icon" aria-hidden="true">▤</span>Reports</a>
+                <a href="Services.html"><span class="nav-icon" aria-hidden="true">⚙</span>Settings</a>
+                <a href="home.html"><span class="nav-icon" aria-hidden="true">↪</span>Logout</a>
+            </nav>
+            <div class="sidebar-bottom">
+                <div class="sidebar-note"><strong>Keep your city clean</strong><span>Small actions make a greener future.</span></div>
+                <div class="user-profile">
+                    <span class="avatar" aria-hidden="true">AD</span>
+                    <span><span class="user-name">Administrator</span><span class="user-role">System admin</span></span>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="topbar">
+                <button class="menu-button" id="menuToggle" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+                <div class="breadcrumb">Workspace <span aria-hidden="true">/</span> <strong>Dashboard</strong></div>
+                <div class="topbar-actions">
+                    <span class="date-label" id="currentDate"></span>
+                    <button class="icon-button" id="refreshButton" type="button" aria-label="Refresh dashboard" title="Refresh dashboard">↻</button>
+                </div>
+            </div>
+
+            <section class="page-heading" aria-labelledby="pageTitle">
+                <div>
+                    <p class="eyebrow">Overview</p>
+                    <h1 id="pageTitle">Good day, Administrator</h1>
+                    <p>Here’s what’s happening across your smart bin network.</p>
+                </div>
+                <a class="primary-button" href="Reports.html"><span aria-hidden="true">↗</span> View collection reports</a>
+            </section>
+
+            <section class="stats-grid" aria-label="Bin overview">
+                <article class="stat-card">
+                    <div class="stat-top"><span class="stat-label">Total smart bins</span><span class="stat-icon" aria-hidden="true">▣</span></div>
+                    <div class="stat-value">20</div><div class="stat-caption"><strong>+2</strong> added this month</div>
+                </article>
+                <article class="stat-card">
+                    <div class="stat-top"><span class="stat-label">Normal</span><span class="stat-icon" aria-hidden="true">✓</span></div>
+                    <div class="stat-value">12</div><div class="stat-caption">60% of total bins</div>
+                </article>
+                <article class="stat-card warning">
+                    <div class="stat-top"><span class="stat-label">Nearly full</span><span class="stat-icon" aria-hidden="true">◷</span></div>
+                    <div class="stat-value">5</div><div class="stat-caption">25% of total bins</div>
+                </article>
+                <article class="stat-card danger">
+                    <div class="stat-top"><span class="stat-label">Full</span><span class="stat-icon" aria-hidden="true">!</span></div>
+                    <div class="stat-value">3</div><div class="stat-caption">15% of total bins</div>
+                </article>
+            </section>
+
+            <div class="content-grid">
+                <section class="panel" aria-labelledby="trendTitle">
+                    <div class="panel-heading">
+                        <div><h2 id="trendTitle">Waste collection trend</h2><p>Daily collection volume over the past 6 days</p></div>
+                        <label class="sr-only" for="chartPeriod">Chart period</label>
+                        <select class="period-select" id="chartPeriod" aria-label="Chart period"><option value="week">Last 6 days</option><option value="month">This month</option></select>
+                    </div>
+                    <div class="chart-wrap"><canvas id="wasteChart" role="img" aria-label="Bar chart comparing wet and dry waste collections from November 1 to November 6"></canvas></div>
+                    <div class="legend"><span><i></i>Wet waste</span><span><i class="dry-dot"></i>Dry waste</span></div>
+                </section>
+
+                <section class="panel" aria-labelledby="statusTitle">
+                    <div class="panel-heading"><div><h2 id="statusTitle">Bin status distribution</h2><p>Current status of all deployed bins</p></div></div>
+                    <div class="status-list">
+                        <div class="status-row"><span class="status-name">Normal</span><span class="status-count">12 bins · 60%</span><div class="progress-track"><div class="progress-fill" style="width:60%"></div></div></div>
+                        <div class="status-row"><span class="status-name">Nearly full</span><span class="status-count">5 bins · 25%</span><div class="progress-track"><div class="progress-fill" style="width:25%"></div></div></div>
+                        <div class="status-row"><span class="status-name">Full</span><span class="status-count">3 bins · 15%</span><div class="progress-track"><div class="progress-fill" style="width:15%"></div></div></div>
+                    </div>
+                    <div class="status-summary"><span aria-hidden="true">●</span><span><strong>8 bins</strong> need collection soon</span></div>
+                </section>
+            </div>
+
+            <section class="panel table-panel" aria-labelledby="binsTitle">
+                <div class="panel-heading">
+                    <div><h2 id="binsTitle">Smart bin status</h2><p>Monitor fill levels and collection status</p></div>
+                    <div class="table-controls">
+                        <label class="sr-only" for="statusFilter">Filter bins by status</label>
+                        <select class="period-select" id="statusFilter"><option value="all">All statuses</option><option value="normal">Normal</option><option value="nearly full">Nearly full</option><option value="full">Full</option></select>
+                        <label class="sr-only" for="binSearch">Search bins or locations</label>
+                        <input class="search-input" id="binSearch" type="search" placeholder="Search bins or locations">
+                    </div>
+                </div>
+                <div class="table-scroll">
+                    <table>
+                        <thead><tr><th>Bin ID</th><th>Location</th><th>Fill level</th><th>Status</th><th>Last updated</th><th>Action</th></tr></thead>
+                        <tbody id="binTableBody">
+                            <tr data-id="Bin-001" data-location="College campus" data-fill="35" data-status="Normal" data-updated="10:20 AM"><td class="bin-id">Bin-001</td><td>College campus</td><td><span class="fill-cell">35% <span class="mini-track"><span style="width:35%"></span></span></span></td><td><span class="status-badge">Normal</span></td><td>10:20 AM</td><td><button class="view-button" type="button">View details</button></td></tr>
+                            <tr data-id="Bin-002" data-location="Library" data-fill="60" data-status="Nearly Full" data-updated="11:30 AM"><td class="bin-id">Bin-002</td><td>Library</td><td><span class="fill-cell">60% <span class="mini-track"><span style="width:60%;background:#dfa943"></span></span></span></td><td><span class="status-badge nearly-full">Nearly full</span></td><td>11:30 AM</td><td><button class="view-button" type="button">View details</button></td></tr>
+                            <tr data-id="Bin-003" data-location="Playground" data-fill="90" data-status="Full" data-updated="12:45 PM"><td class="bin-id">Bin-003</td><td>Playground</td><td><span class="fill-cell">90% <span class="mini-track"><span style="width:90%;background:#d86d64"></span></span></span></td><td><span class="status-badge full">Full</span></td><td>12:45 PM</td><td><button class="view-button" type="button">View details</button></td></tr>
+                            <tr data-id="Bin-004" data-location="Hostel" data-fill="45" data-status="Normal" data-updated="01:15 PM"><td class="bin-id">Bin-004</td><td>Hostel</td><td><span class="fill-cell">45% <span class="mini-track"><span style="width:45%"></span></span></span></td><td><span class="status-badge">Normal</span></td><td>01:15 PM</td><td><button class="view-button" type="button">View details</button></td></tr>
+                            <tr data-id="Bin-005" data-location="Canteen" data-fill="75" data-status="Nearly Full" data-updated="02:30 PM"><td class="bin-id">Bin-005</td><td>Canteen</td><td><span class="fill-cell">75% <span class="mini-track"><span style="width:75%;background:#dfa943"></span></span></span></td><td><span class="status-badge nearly-full">Nearly full</span></td><td>02:30 PM</td><td><button class="view-button" type="button">View details</button></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <div class="bottom-grid">
+                <section class="panel" aria-labelledby="locationsTitle">
+                    <div class="panel-heading"><div><h2 id="locationsTitle">Bin locations</h2><p>Quick view of monitored areas</p></div></div>
+                    <div class="location-list">
+                        <div class="location-item"><span class="location-pin" aria-hidden="true">⌖</span><span><strong>Bin-001</strong><span>College campus</span></span></div>
+                        <div class="location-item"><span class="location-pin" aria-hidden="true">⌖</span><span><strong>Bin-002</strong><span>Library</span></span></div>
+                        <div class="location-item"><span class="location-pin" aria-hidden="true">⌖</span><span><strong>Bin-003</strong><span>Playground</span></span></div>
+                        <div class="location-item"><span class="location-pin" aria-hidden="true">⌖</span><span><strong>Bin-004</strong><span>Hostel</span></span></div>
+                        <div class="location-item"><span class="location-pin" aria-hidden="true">⌖</span><span><strong>Bin-005</strong><span>Canteen</span></span></div>
+                    </div>
+                </section>
+                <section class="panel reports-card">
+                    <div><p class="eyebrow">Stay informed</p><h3>Make better decisions with your data</h3><p>Review collection trends and download your latest reports.</p></div>
+                    <a class="primary-button" href="Reports.html">Explore reports <span aria-hidden="true">→</span></a>
+                </section>
+            </div>
+            <footer>© 2026 Smart Waste Management System. All rights reserved.</footer>
+        </main>
+    </div>
+
+    <dialog id="binDialog" aria-labelledby="dialogTitle">
+        <div class="dialog-content">
+            <div class="dialog-heading"><div><h2 id="dialogTitle">Bin details</h2><p id="dialogLocation"></p></div><button class="dialog-close" id="closeDialog" type="button" aria-label="Close dialog">×</button></div>
+            <div class="detail-grid">
+                <div class="detail-item"><span>Current fill level</span><strong id="dialogFill"></strong></div>
+                <div class="detail-item"><span>Current status</span><strong id="dialogStatus"></strong></div>
+                <div class="detail-item"><span>Last updated</span><strong id="dialogUpdated"></strong></div>
+                <div class="detail-item"><span>Collection</span><strong id="dialogCollection"></strong></div>
+            </div>
+        </div>
+    </dialog>
+    <div class="toast" id="toast" role="status" aria-live="polite">Dashboard is up to date.</div>
+
+    <script>
+        const chartData = {
+            week: {
+                labels: ["Nov 1", "Nov 2", "Nov 3", "Nov 4", "Nov 5", "Nov 6"],
+                wet: [50, 60, 55, 70, 80, 90],
+                dry: [30, 40, 35, 50, 60, 70]
+            },
+            month: {
+                labels: ["Week 1", "Week 2", "Week 3", "Week 4"],
+                wet: [235, 280, 310, 355],
+                dry: [155, 190, 210, 250]
+            }
+        };
+
+        const canvas = document.getElementById("wasteChart");
+        const chartContext = canvas.getContext("2d");
+        const chartPeriod = document.getElementById("chartPeriod");
+
+        function drawChart(period) {
+            const data = chartData[period];
+            const bounds = canvas.getBoundingClientRect();
+            const ratio = window.devicePixelRatio || 1;
+            canvas.width = Math.max(1, Math.round(bounds.width * ratio));
+            canvas.height = Math.max(1, Math.round(bounds.height * ratio));
+            chartContext.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+            const width = bounds.width;
+            const height = bounds.height;
+            const margin = { top: 10, right: 8, bottom: 30, left: 34 };
+            const plotWidth = width - margin.left - margin.right;
+            const plotHeight = height - margin.top - margin.bottom;
+            const maxValue = Math.ceil(Math.max(...data.wet) / 50) * 50;
+            const steps = 4;
+
+            chartContext.clearRect(0, 0, width, height);
+            chartContext.font = "10px Inter, system-ui, sans-serif";
+            chartContext.textBaseline = "middle";
+            chartContext.textAlign = "right";
+
+            for (let index = 0; index <= steps; index++) {
+                const y = margin.top + (plotHeight / steps) * index;
+                const value = Math.round(maxValue - (maxValue / steps) * index);
+                chartContext.strokeStyle = "#edf1ed";
+                chartContext.lineWidth = 1;
+                chartContext.beginPath();
+                chartContext.moveTo(margin.left, y);
+                chartContext.lineTo(width - margin.right, y);
+                chartContext.stroke();
+                chartContext.fillStyle = "#89948c";
+                chartContext.fillText(String(value), margin.left - 8, y);
+            }
+
+            const groupWidth = plotWidth / data.labels.length;
+            const barWidth = Math.min(20, groupWidth * .25);
+            data.labels.forEach((label, index) => {
+                const center = margin.left + groupWidth * (index + .5);
+                const wetHeight = (data.wet[index] / maxValue) * plotHeight;
+                const dryHeight = (data.dry[index] / maxValue) * plotHeight;
+                chartContext.fillStyle = "#358b65";
+                chartContext.beginPath();
+                chartContext.roundRect(center - barWidth - 2, margin.top + plotHeight - wetHeight, barWidth, wetHeight, [4, 4, 0, 0]);
+                chartContext.fill();
+                chartContext.fillStyle = "#b7d8c4";
+                chartContext.beginPath();
+                chartContext.roundRect(center + 2, margin.top + plotHeight - dryHeight, barWidth, dryHeight, [4, 4, 0, 0]);
+                chartContext.fill();
+                chartContext.fillStyle = "#78847d";
+                chartContext.textAlign = "center";
+                chartContext.textBaseline = "top";
+                chartContext.fillText(label, center, height - margin.bottom + 10);
+            });
+        }
+
+        function applyFilters() {
+            const query = document.getElementById("binSearch").value.trim().toLowerCase();
+            const status = document.getElementById("statusFilter").value;
+            let visible = 0;
+            document.querySelectorAll("#binTableBody tr").forEach((row) => {
+                const matchesQuery = row.dataset.id.toLowerCase().includes(query) || row.dataset.location.toLowerCase().includes(query);
+                const matchesStatus = status === "all" || row.dataset.status.toLowerCase() === status;
+                row.hidden = !(matchesQuery && matchesStatus);
+                if (!row.hidden) visible++;
+            });
+
+            const existingMessage = document.querySelector(".empty-row");
+            if (existingMessage) existingMessage.remove();
+            if (visible === 0) {
+                const row = document.createElement("tr");
+                row.className = "empty-row";
+                row.innerHTML = '<td colspan="6">No bins match your search.</td>';
+                document.getElementById("binTableBody").appendChild(row);
+            }
+        }
+
+        document.getElementById("currentDate").textContent = new Intl.DateTimeFormat("en", {
+            weekday: "short", year: "numeric", month: "short", day: "numeric"
+        }).format(new Date());
+
+        chartPeriod.addEventListener("change", () => drawChart(chartPeriod.value));
+        document.getElementById("binSearch").addEventListener("input", applyFilters);
+        document.getElementById("statusFilter").addEventListener("change", applyFilters);
+        window.addEventListener("resize", () => drawChart(chartPeriod.value));
+
+        const sidebar = document.getElementById("sidebar");
+        const menuToggle = document.getElementById("menuToggle");
+        menuToggle.addEventListener("click", () => {
+            const isOpen = sidebar.classList.toggle("open");
+            menuToggle.setAttribute("aria-expanded", String(isOpen));
+            menuToggle.setAttribute("aria-label", isOpen ? "Close navigation" : "Open navigation");
+        });
+
+        const binDialog = document.getElementById("binDialog");
+        document.querySelectorAll(".view-button").forEach((button) => {
+            button.addEventListener("click", () => {
+                const bin = button.closest("tr").dataset;
+                document.getElementById("dialogTitle").textContent = bin.id;
+                document.getElementById("dialogLocation").textContent = bin.location;
+                document.getElementById("dialogFill").textContent = bin.fill + "%";
+                document.getElementById("dialogStatus").textContent = bin.status;
+                document.getElementById("dialogUpdated").textContent = bin.updated;
+                document.getElementById("dialogCollection").textContent = Number(bin.fill) >= 60 ? "Collection recommended" : "No collection needed";
+                binDialog.showModal();
+            });
+        });
+        document.getElementById("closeDialog").addEventListener("click", () => binDialog.close());
+        binDialog.addEventListener("click", (event) => {
+            if (event.target === binDialog) binDialog.close();
+        });
+
+        let toastTimer;
+        document.getElementById("refreshButton").addEventListener("click", (event) => {
+            drawChart(chartPeriod.value);
+            const toast = document.getElementById("toast");
+            toast.classList.add("visible");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("visible"), 2200);
+            event.currentTarget.blur();
+        });
+
+        if ("ResizeObserver" in window) {
+            new ResizeObserver(() => drawChart(chartPeriod.value)).observe(canvas.parentElement);
+        }
+        drawChart(chartPeriod.value);
+    </script>
+</body>
+</html>

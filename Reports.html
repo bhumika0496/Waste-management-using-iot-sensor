@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Review waste collection trends, bin activity, and environmental impact with GreenCycle reports.">
+    <title>Reports | GreenCycle</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+</head>
+<body class="reports-page">
+    <header class="site-header">
+        <a class="brand" href="home.html" aria-label="GreenCycle home">
+            <span class="brand-icon" aria-hidden="true">♻</span>
+            <span>Green<span class="brand-accent">Cycle</span></span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+            <span class="menu-toggle-label">Menu</span>
+            <span class="menu-toggle-icon" aria-hidden="true">☰</span>
+        </button>
+
+        <nav class="site-nav" id="site-nav" aria-label="Main navigation">
+            <a href="home.html">Home</a>
+            <a href="AboutUs.html">About us</a>
+            <a href="Services.html">Services</a>
+            <a href="Dashboard.html">Dashboard</a>
+            <a class="active" href="Reports.html" aria-current="page">Reports</a>
+            <a href="Contacts.html">Contact</a>
+        </nav>
+    </header>
+
+    <main class="reports-main">
+        <section class="reports-hero">
+            <div>
+                <p class="eyebrow">Collection analytics</p>
+                <h1>Reports &amp; insights</h1>
+                <p>Track collection activity, understand waste patterns, and see the impact of smarter waste management.</p>
+            </div>
+            <div class="reports-hero-mark" aria-hidden="true">♻</div>
+        </section>
+
+        <section class="report-filter panel" aria-labelledby="filter-title">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">Find a report</p>
+                    <h2 id="filter-title">Filter collections</h2>
+                </div>
+                <span class="filter-icon" aria-hidden="true">⌕</span>
+            </div>
+            <form id="report-filters" class="filter-form">
+                <div class="filter-field">
+                    <label for="start-date">Start date</label>
+                    <input type="date" id="start-date" name="startDate">
+                </div>
+                <div class="filter-field">
+                    <label for="end-date">End date</label>
+                    <input type="date" id="end-date" name="endDate">
+                </div>
+                <div class="filter-field">
+                    <label for="bin-filter">Collection bin</label>
+                    <select id="bin-filter" name="bin">
+                        <option value="all">All bins</option>
+                        <option value="BIN-001">BIN-001</option>
+                        <option value="BIN-002">BIN-002</option>
+                        <option value="BIN-003">BIN-003</option>
+                        <option value="BIN-004">BIN-004</option>
+                        <option value="BIN-005">BIN-005</option>
+                    </select>
+                </div>
+                <div class="filter-actions">
+                    <button class="button button-primary" type="submit">Apply filters <span aria-hidden="true">→</span></button>
+                    <button class="button button-secondary" type="reset">Reset</button>
+                    <button class="button button-secondary print-button" type="button" id="print-report">Download report <span aria-hidden="true">↓</span></button>
+                </div>
+                <p class="filter-message" id="filter-message" role="status" aria-live="polite">Showing all collection records. Trend reflects all bins within the selected dates.</p>
+            </form>
+        </section>
+
+        <section class="report-section" aria-labelledby="summary-title">
+            <div class="section-title-row report-section-heading">
+                <div>
+                    <p class="eyebrow">At a glance</p>
+                    <h2 id="summary-title">Collection summary</h2>
+                </div>
+                <p>Totals update when you apply filters.</p>
+            </div>
+            <div class="summary-grid">
+                <article class="summary-card summary-total">
+                    <span class="summary-icon" aria-hidden="true">↗</span>
+                    <p>Total collected</p>
+                    <h3><span data-summary="total">90</span><small>kg</small></h3>
+                    <span class="summary-caption">Across filtered collections</span>
+                </article>
+                <article class="summary-card">
+                    <span class="summary-icon icon-wet" aria-hidden="true">◉</span>
+                    <p>Wet waste</p>
+                    <h3><span data-summary="wet">25</span><small>kg</small></h3>
+                    <span class="summary-caption">Organic material</span>
+                </article>
+                <article class="summary-card">
+                    <span class="summary-icon icon-dry" aria-hidden="true">▤</span>
+                    <p>Dry waste</p>
+                    <h3><span data-summary="dry">12</span><small>kg</small></h3>
+                    <span class="summary-caption">Ready for sorting</span>
+                </article>
+                <article class="summary-card">
+                    <span class="summary-icon icon-recycle" aria-hidden="true">♻</span>
+                    <p>Recyclable</p>
+                    <h3><span data-summary="recyclable">15</span><small>kg</small></h3>
+                    <span class="summary-caption">Kept in circulation</span>
+                </article>
+                <article class="summary-card">
+                    <span class="summary-icon icon-mixed" aria-hidden="true">◎</span>
+                    <p>Mixed waste</p>
+                    <h3><span data-summary="mixed">38</span><small>kg</small></h3>
+                    <span class="summary-caption">Awaiting separation</span>
+                </article>
+            </div>
+        </section>
+
+        <section class="report-section report-panel" aria-labelledby="trend-title">
+            <div class="section-title-row report-section-heading">
+                <div>
+                    <p class="eyebrow">Collection history</p>
+                    <h2 id="trend-title">Waste collection trend</h2>
+                </div>
+                <span class="trend-legend"><i aria-hidden="true"></i> Total waste (kg)</span>
+            </div>
+            <div class="table-wrap">
+                <table class="report-table trend-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Collection date</th>
+                            <th scope="col">Dry waste</th>
+                            <th scope="col">Wet waste</th>
+                            <th scope="col">Total collected</th>
+                            <th scope="col" class="trend-bar-heading">Volume</th>
+                        </tr>
+                    </thead>
+                    <tbody id="trend-rows">
+                        <tr data-trend-date="2026-10-01" data-trend-total="40">
+                            <td>01 Oct 2026</td><td>20 kg</td><td>20 kg</td><td class="table-total">40 kg</td>
+                            <td class="trend-bar-cell"><span class="trend-bar" style="--bar-width: 80%"></span></td>
+                        </tr>
+                        <tr data-trend-date="2026-10-04" data-trend-total="33">
+                            <td>04 Oct 2026</td><td>10 kg</td><td>23 kg</td><td class="table-total">33 kg</td>
+                            <td class="trend-bar-cell"><span class="trend-bar" style="--bar-width: 66%"></span></td>
+                        </tr>
+                        <tr data-trend-date="2026-10-07" data-trend-total="35">
+                            <td>07 Oct 2026</td><td>15 kg</td><td>20 kg</td><td class="table-total">35 kg</td>
+                            <td class="trend-bar-cell"><span class="trend-bar" style="--bar-width: 70%"></span></td>
+                        </tr>
+                        <tr data-trend-date="2026-10-10" data-trend-total="50">
+                            <td>10 Oct 2026</td><td>20 kg</td><td>30 kg</td><td class="table-total">50 kg</td>
+                            <td class="trend-bar-cell"><span class="trend-bar" style="--bar-width: 100%"></span></td>
+                        </tr>
+                        <tr data-trend-date="2026-10-13" data-trend-total="50">
+                            <td>13 Oct 2026</td><td>30 kg</td><td>20 kg</td><td class="table-total">50 kg</td>
+                            <td class="trend-bar-cell"><span class="trend-bar" style="--bar-width: 100%"></span></td>
+                        </tr>
+                        <tr id="empty-trend-row" hidden><td colspan="5">No trend data matches this date range.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="table-note">Trend data includes all bins and is filtered by date range.</p>
+        </section>
+
+        <section class="report-section report-panel" aria-labelledby="bin-report-title">
+            <div class="section-title-row report-section-heading">
+                <div>
+                    <p class="eyebrow">Collection details</p>
+                    <h2 id="bin-report-title">Bin-wise report</h2>
+                </div>
+                <span class="table-record-count" id="record-count">5 records</span>
+            </div>
+            <div class="table-wrap">
+                <table class="report-table bin-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Bin ID</th>
+                            <th scope="col">Location</th>
+                            <th scope="col">Waste type</th>
+                            <th scope="col">Collected</th>
+                            <th scope="col">Collection date</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bin-rows">
+                        <tr data-bin="BIN-001" data-type="mixed" data-kg="18" data-record-date="2026-10-22">
+                            <td class="bin-id">BIN-001</td><td>College campus</td><td><span class="waste-tag tag-mixed">Mixed</span></td>
+                            <td class="table-total">18 kg</td><td>22 Oct 2026</td><td><span class="status-badge">Collected</span></td>
+                        </tr>
+                        <tr data-bin="BIN-002" data-type="dry" data-kg="12" data-record-date="2026-10-22">
+                            <td class="bin-id">BIN-002</td><td>Library</td><td><span class="waste-tag tag-dry">Dry</span></td>
+                            <td class="table-total">12 kg</td><td>22 Oct 2026</td><td><span class="status-badge">Collected</span></td>
+                        </tr>
+                        <tr data-bin="BIN-003" data-type="wet" data-kg="25" data-record-date="2026-10-22">
+                            <td class="bin-id">BIN-003</td><td>Hostel</td><td><span class="waste-tag tag-wet">Wet</span></td>
+                            <td class="table-total">25 kg</td><td>22 Oct 2026</td><td><span class="status-badge">Collected</span></td>
+                        </tr>
+                        <tr data-bin="BIN-004" data-type="mixed" data-kg="20" data-record-date="2026-10-22">
+                            <td class="bin-id">BIN-004</td><td>Admin Block</td><td><span class="waste-tag tag-mixed">Mixed</span></td>
+                            <td class="table-total">20 kg</td><td>22 Oct 2026</td><td><span class="status-badge">Collected</span></td>
+                        </tr>
+                        <tr data-bin="BIN-005" data-type="recyclable" data-kg="15" data-record-date="2026-10-22">
+                            <td class="bin-id">BIN-005</td><td>Cafeteria</td><td><span class="waste-tag tag-recycle">Recyclable</span></td>
+                            <td class="table-total">15 kg</td><td>22 Oct 2026</td><td><span class="status-badge">Collected</span></td>
+                        </tr>
+                        <tr id="empty-bin-row" hidden><td colspan="6">No collection records match these filters.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <div class="report-bottom-grid">
+            <section class="report-panel recent-panel" aria-labelledby="recent-title">
+                <div class="panel-heading">
+                    <div><p class="eyebrow">Latest activity</p><h2 id="recent-title">Recent reports</h2></div>
+                    <span class="panel-heading-icon" aria-hidden="true">◷</span>
+                </div>
+                <ul class="recent-list">
+                    <li><span class="recent-date">22 Oct 2026</span><strong>245 kg</strong><span>Waste collected</span></li>
+                    <li><span class="recent-date">19 Oct 2026</span><strong>198 kg</strong><span>Waste collected</span></li>
+                    <li><span class="recent-date">16 Oct 2026</span><strong>210 kg</strong><span>Waste collected</span></li>
+                    <li><span class="recent-date">13 Oct 2026</span><strong>180 kg</strong><span>Waste collected</span></li>
+                </ul>
+            </section>
+
+            <section class="impact-card" aria-labelledby="impact-title">
+                <p class="eyebrow">A better tomorrow</p>
+                <h2 id="impact-title">Every collection makes a difference.</h2>
+                <div class="impact-stat"><span aria-hidden="true">♻</span><p><strong>85 kg</strong><small>Waste recycled</small></p></div>
+                <div class="impact-stat"><span aria-hidden="true">✓</span><p><strong>100%</strong><small>Collection activity monitored</small></p></div>
+                <p class="impact-footnote">Together, we’re building cleaner, more sustainable communities.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <a class="brand footer-brand" href="home.html">
+            <span class="brand-icon" aria-hidden="true">♻</span>
+            <span>Green<span class="brand-accent">Cycle</span></span>
+        </a>
+        <p>Building a cleaner and greener future with smart waste technology.</p>
+        <p class="copyright">&copy; <span id="current-year">2026</span> GreenCycle</p>
+    </footer>
+</body>
+</html>
